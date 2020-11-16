@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres
+    ports:
+      - '5432:5432'
+    container_name: 'postgres'
+    restart: always
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: 123456
+
+  mongodb:
+    image: mongo
+    ports:
+      - '27017:27017'
+    container_name: 'mongodb'
+    restart: always
+    volumes:
+      - mongodb-data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: 123456    
+
+volumes:
+  postgres-data:
+  mongodb-data:
