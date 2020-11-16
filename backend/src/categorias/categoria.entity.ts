@@ -11,6 +11,7 @@ import {
 @Entity()
 @Unique(['nome'])
 export class Categoria extends BaseEntity {
+  [x: string]: any;
   @PrimaryGeneratedColumn()
   id: string;
 
