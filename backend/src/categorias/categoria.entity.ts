@@ -11,9 +11,8 @@ import {
 @Entity()
 @Unique(['nome'])
 export class Categoria extends BaseEntity {
-  [x: string]: any;
   @PrimaryGeneratedColumn()
-  id: string;
+  id: number;
 
   @Column({ nullable: false, type: 'varchar', length: 350 })
   nome: string;
