@@ -31,7 +31,7 @@ export class CategoriasService {
     return categoria;
   }
 
-  async updateCategoria(updateCategoriaDto: UpdateCategoriaDto, id: number): Promise<Categoria> {
+  /* async updateCategoria(updateCategoriaDto: UpdateCategoriaDto, id: number): Promise<Categoria> {
     const categoria = await this.findCategoriaById(id);
     const { nome, descricao, status } = updateCategoriaDto;
     categoria.nome = nome ? nome : categoria.nome;
@@ -44,6 +44,16 @@ export class CategoriasService {
       throw new InternalServerErrorException(
         'Erro ao salvar os dados no banco de dados',
       );
+    }
+  } */
+
+  async updateCategoria(updateCategoriaDto: UpdateCategoriaDto, id: number): Promise<Categoria> {
+    const result = await this.categoriaRepository.update({ id }, updateCategoriaDto);
+    if (result.affected > 0) {
+      const categoria = await this.findCategoriaById(id);
+      return categoria;
+    } else {
+      throw new NotFoundException('Categoria não encontrada');
     }
   }
 
