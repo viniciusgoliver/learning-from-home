@@ -1,10 +1,13 @@
 import { UserRole } from '../user-roles.enum';
 import { IsString, IsEmail, IsOptional } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+
 export class UpdateUserDto {
   @IsOptional()
   @IsString({
     message: 'Informe um nome de usuário válido',
   })
+  @ApiProperty()
   name: string;
 
   @IsOptional()
@@ -14,6 +17,7 @@ export class UpdateUserDto {
       message: 'Informe um endereço de email válido',
     },
   )
+  @ApiProperty()
   email: string;
 
   @IsOptional()

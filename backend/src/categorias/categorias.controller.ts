@@ -19,13 +19,17 @@ import { Role } from '../auth/role.decorator';
 import { UserRole } from '../users/user-roles.enum';
 import { UpdateCategoriaDto } from './dto/update-categorias.dto';
 import { FindCategoriasQueryDto } from './dto/find-users-query.dto';
+import { ApiBearerAuth, ApiBody, ApiParam, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Documentação API Categorias')
 @Controller('categorias')
 @UseGuards(AuthGuard(), RolesGuard)
 export class CategoriasController {
   constructor(private categoriasService: CategoriasService) {}
 
   @Post()
+  @ApiBody({ type: CreateCategoriaDto})
+  @ApiBearerAuth('access-token')
   @Role(UserRole.ADMIN)
   async createCategoria(
     @Body(ValidationPipe) createCategoriaDto: CreateCategoriaDto,
@@ -38,6 +42,8 @@ export class CategoriasController {
   }
 
   @Get(':id')
+  @ApiParam({ name: 'id', type: String })
+  @ApiBearerAuth('access-token')
   @Role(UserRole.ADMIN)
   async findCategoriaById(@Param('id') id): Promise<ReturnCategoriaDto> {
     const categoria = await this.categoriasService.findCategoriaById(id);
@@ -48,6 +54,8 @@ export class CategoriasController {
   }
 
   @Patch(':id')
+  @ApiBody({ type: UpdateCategoriaDto})
+  @ApiBearerAuth('access-token')
   @Role(UserRole.ADMIN)
   async updateCategoria(
     @Body(ValidationPipe) updateCategoriaDto: UpdateCategoriaDto,    
@@ -57,6 +65,8 @@ export class CategoriasController {
   }
 
   @Delete(':id')
+  @ApiParam({ name: 'id', type: String })
+  @ApiBearerAuth('access-token')
   @Role(UserRole.ADMIN)
   async deleteCategoria(@Param('id') id: number) {
     await this.categoriasService.deleteCategoria(id);
@@ -66,6 +76,8 @@ export class CategoriasController {
   }
 
   @Get()
+  @ApiBody({ type: FindCategoriasQueryDto})
+  @ApiBearerAuth('access-token')
   @Role(UserRole.ADMIN)
   async findCategorias(@Query() query: FindCategoriasQueryDto) {
     const found = await this.categoriasService.findCategorias(query);

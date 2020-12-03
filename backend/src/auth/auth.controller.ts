@@ -17,12 +17,15 @@ import { User } from '../users/user.entity';
 import { GetUser } from './get-user.decorator';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { UserRole } from '../users/user-roles.enum';
+import { ApiBearerAuth, ApiBody, ApiParam, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Documentação API Autenticação')
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('/signup')
+  @ApiBody({ type: CreateUserDto})
   async signUp(
     @Body(ValidationPipe) createUserDto: CreateUserDto,
   ): Promise<{ message: string }> {
@@ -33,6 +36,7 @@ export class AuthController {
   }
 
   @Post('/signin')
+  @ApiBody({ type: CredentialsDto})
   async signIn(
     @Body(ValidationPipe) credentiaslsDto: CredentialsDto,
   ): Promise<{ token: string }> {
@@ -40,6 +44,7 @@ export class AuthController {
   }
 
   @Patch(':token')
+  @ApiParam({ name: 'token', type: String })
   async confirmEmail(@Param('token') token: string) {
     await this.authService.confirmEmail(token);
     return {
@@ -48,6 +53,7 @@ export class AuthController {
   }
 
   @Post('/send-recover-email')
+  @ApiParam({ name: 'email', type: String })
   async sendRecoverPasswordEmail(
     @Body('email') email: string,
   ): Promise<{ message: string }> {
@@ -58,6 +64,7 @@ export class AuthController {
   }
 
   @Patch('/reset-password/:token')
+  @ApiParam({ name: 'token', type: String })
   async resetPassword(
     @Param('token') token: string,
     @Body(ValidationPipe) changePasswordDto: ChangePasswordDto,
@@ -70,6 +77,9 @@ export class AuthController {
   }
 
   @Patch(':id/change-password')
+  @ApiBody({ type: ChangePasswordDto})
+  @ApiParam({ name: 'id', type: String })
+  @ApiBearerAuth('access-token')
   @UseGuards(AuthGuard())
   async changePassword(
     @Param('id') id: string,
@@ -88,6 +98,7 @@ export class AuthController {
   }
 
   @Get('/me')
+  @ApiBearerAuth('access-token')
   @UseGuards(AuthGuard())
   getMe(@GetUser() user: User): User {
     return user;

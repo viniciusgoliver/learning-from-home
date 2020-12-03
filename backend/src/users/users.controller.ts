@@ -22,13 +22,17 @@ import { UpdateUserDto } from './dto/update-users.dto';
 import { User } from './user.entity';
 import { GetUser } from '../auth/get-user.decorator';
 import { FindUsersQueryDto } from './dto/find-users-query.dto';
+import { ApiBearerAuth, ApiBody, ApiParam, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Documentação API Users')
 @Controller('users')
 @UseGuards(AuthGuard(), RolesGuard)
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
   @Post()
+  @ApiBody({ type: CreateUserDto})
+  @ApiBearerAuth('access-token')
   @Role(UserRole.ADMIN)
   async createAdminUser(
     @Body(ValidationPipe) createUserDto: CreateUserDto,
@@ -41,6 +45,8 @@ export class UsersController {
   }
 
   @Get(':id')
+  @ApiParam({ name: 'id', type: String })
+  @ApiBearerAuth('access-token')
   @Role(UserRole.ADMIN)
   async findUserById(@Param('id') id): Promise<ReturnUserDto> {
     const user = await this.usersService.findUserById(id);
@@ -51,6 +57,8 @@ export class UsersController {
   }
 
   @Patch(':id')
+  @ApiBody({ type: UpdateUserDto})
+  @ApiBearerAuth('access-token')
   async updateUser(
     @Body(ValidationPipe) updateUserDto: UpdateUserDto,
     @GetUser() user: User,
@@ -66,6 +74,8 @@ export class UsersController {
   }
 
   @Delete(':id')
+  @ApiParam({ name: 'id', type: String })
+  @ApiBearerAuth('access-token')
   @Role(UserRole.ADMIN)
   async deleteUser(@Param('id') id: string) {
     await this.usersService.deleteUser(id);
@@ -75,6 +85,8 @@ export class UsersController {
   }
 
   @Get()
+  @ApiBody({ type: FindUsersQueryDto})
+  @ApiBearerAuth('access-token')
   @Role(UserRole.ADMIN)
   async findUsers(@Query() query: FindUsersQueryDto) {
     const found = await this.usersService.findUsers(query);

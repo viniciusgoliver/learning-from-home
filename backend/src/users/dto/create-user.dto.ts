@@ -4,6 +4,7 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateUserDto {
   @IsNotEmpty({
@@ -18,6 +19,7 @@ export class CreateUserDto {
   @MaxLength(200, {
     message: 'O endereço de email deve ter menos de 200 caracteres',
   })
+  @ApiProperty()
   email: string;
 
   @IsNotEmpty({
@@ -26,6 +28,7 @@ export class CreateUserDto {
   @MaxLength(200, {
     message: 'O nome deve ter menos de 200 caracteres',
   })
+  @ApiProperty()
   name: string;
 
   @IsNotEmpty({
@@ -34,6 +37,7 @@ export class CreateUserDto {
   @MinLength(6, {
     message: 'A senha deve ter no mínimo 6 caracteres',
   })
+  @ApiProperty()
   password: string;
 
   @IsNotEmpty({
@@ -42,5 +46,6 @@ export class CreateUserDto {
   @MinLength(6, {
     message: 'A confirmação de senha deve ter no mínimo 6 caracteres',
   })
+  @ApiProperty()
   passwordConfirmation: string;
 }
